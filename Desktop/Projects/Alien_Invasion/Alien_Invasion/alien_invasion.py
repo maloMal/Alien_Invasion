@@ -6,6 +6,7 @@ from pygame.sprite import Group
 from settings import Setting
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 import game_functions as gf
 
 
@@ -17,24 +18,28 @@ def run_game():
 		(ai_settings.screen_width, ai_settings.screen_height))
 	pygame.display.set_caption("Alien Invasion")
 
-	#Make a Ship
+	#Make a Ship, a grooop of bullets and a group of aliens.
 	ship = Ship(ai_settings, screen)
-    #Make a group to store bullets in.
-    bullets = Group()
+	bullets = Group()
+	aliens = Group()
+
+	#create the fleet of aliens
+	gf.create_fleet(ai_settings, screen, aliens)
 
 	#Set the Background Color.
 	#bg_color = (230, 230, 230)
+	#Make an alien
+	#alien = Alien(ai_settings, screen)
 
 	#Start the main loop for the game,
 	while True:
 		gf.check_events(ai_settings, screen, ship, bullets)
 		ship.update()
-        bullets.update()
-		gf.update_screen(ai_settings, screen, ship, bullets)
-        
-        #redraw the screen during each pass through the loop
-        screen.fill(ai_settings.bg_color)
-        ship.blitme()
+		gf.update_bullets(bullets)
+		gf.update_screen(ai_settings, screen, ship, aliens, bullets)
+		#redraw the screen during each pass through the loop
+		screen.fill(ai_settings.bg_color)
+        # Not sure if this should be here: ship.blitme()
 
 		#Watch for keyboard and mouse events.
 		#for even in pygame.event.get():
@@ -43,6 +48,6 @@ def run_game():
 
 
 		#Make the most reently drawn screen visible.
-		pygame.display.flip()
+		#Not sure if this should be here: pygame.display.flip()
 
 run_game()
