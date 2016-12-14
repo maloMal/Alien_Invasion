@@ -55,5 +55,5 @@ def run_game():
 
 		#Make the most reently drawn screen visible.
 		#Not sure if this should be here: pygame.display.flip()
-
+		#Irrelevant comment. Test.
 run_game()
