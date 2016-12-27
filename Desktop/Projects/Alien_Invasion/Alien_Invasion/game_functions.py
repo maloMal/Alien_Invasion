@@ -21,7 +21,7 @@ def check_keyup_events(event, ship):
 	elif event.key == pygame.K_LEFT:
 		ship.moving_left = False
 
-def fire_bullet(ai_settings, screen, ship, ,bullets):
+def fire_bullet(ai_settings, screen, ship, bullets):
 	"""Fire a bullet if limit not reached yet"""
 	#Create a new bullet and add it to the bullets group.
 	if len(bullets) < ai_settings.bullets_allowed:
@@ -108,10 +108,10 @@ def update_bullets(ai_settings, screen, ship, aliens, bullets):
 	#Update Bullet Positions.
 	bullets.update()
 	#gets rid of bullets that have disappeared
-	for bullets in bullets.copy():
+	for bullet in bullets.copy():
 		if bullet.rect.bottom <= 0:
 			bullets.remove(bullet)
-	check_bullet_alien_collision(ai_settings, screen, ship, aliens, bullets)
+	check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets)
 	#Not sure if this should be here: print(len(bullets))
 
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
@@ -136,7 +136,7 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
 def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
 	"""Respond to bullet-alien collisions."""
 	#Remove any bullets and aliens that have collided.
-	collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+	collisions = pygame.sprite.groupcollide(aliens, bullets, True, False)
 	if len(aliens) == 0:
 		#Destroy existing bullets and create new fleet.
 		bullets.empty()
@@ -146,9 +146,8 @@ def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
 	"""Check if the fleet is at an edge, then update the positions of all aliens in the fleet."""
 	check_fleet_edges(ai_settings, aliens)
 	aliens.update()
-
 	#Look for alien-ship collisions
-	if pygame.sprite.spritecollideany(ship, alien):
+	if pygame.sprite.spritecollideany(ship, aliens):
 		ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
 		print("Ship hit!!!")
 	#look for aliens hitting the bottom of the screen.
